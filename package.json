@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "node build/src/main.js",
+    "dev": "npx nodemon",
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
     "build": "tsc -p tsconfig.json",
@@ -36,6 +37,7 @@
   "author": "Jakub Synowiec <jsynowiec@users.noreply.github.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "nodemon": "^2.0.22",
     "tslib": "~2.5"
   },
   "volta": {
