@@ -1,10 +1,9 @@
-import express from 'express'
-import { Request, Response, NextFunction } from 'express'
+import express from "express";
+import { Request, Response, NextFunction } from "express";
+import messageRoute from "../routes/messages.routes";
+const app = express();
 
-const app = express()
-
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
-  res.send('Hello World')
-})
-
-export default app
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/api/v1", messageRoute);
+export default app;

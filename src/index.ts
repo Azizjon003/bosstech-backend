@@ -2,7 +2,7 @@ import connect from "./db";
 import dotenv from "dotenv";
 dotenv.config();
 import app from "./middleware/main";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT ;
 const db = process.env.DB || "mongodb://localhost:27017/express-ts";
 const db_pass = process.env.DB_PASS || "password";
 
