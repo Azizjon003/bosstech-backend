@@ -9,21 +9,7 @@ export const messageValidation = checkSchema({
       errorMessage: "Name should be a string",
     },
   },
-  email: {
-    isEmail: {
-      errorMessage: "Invalid email",
-    },
-    isString: {
-      errorMessage: "Email should be a string",
-    },
-  },
-  phone: {
-    in: ["body"],
-    matches: {
-      options: /^\+998[0-9]{9}$/,
-      errorMessage: "Noto'g'ri telefon formati",
-    },
-  },
+  emailOrPhone: {},
   message: {
     isString: {
       errorMessage: "Message should be a string",
