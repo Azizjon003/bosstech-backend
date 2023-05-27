@@ -16,12 +16,17 @@ const app = express();
 // app.use(limiter);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 daqiqa davomida
-  max: 10, // 15 daqiqada maksimal 100 ta so'rovga chegaralash
+  max: 100, // 15 daqiqada maksimal 100 ta so'rovga chegaralash
   keyGenerator: function (req) {
-    return req.ip; // Foydalanuvchi IP manbasini cheklov kaliti sifatida olib kelish
+    const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    console.log(`Sizning IP manbasingiz: ${clientIP}`);
+    return String(clientIP); // Foydalanuvchi IP manbasini cheklov kaliti sifatida olib kelish
   },
   handler: function (req, res) {
-    res.status(429).send('So\'rovlaringiz cheklov orqali chegaralangan');
+    res.status(429).json({
+      error:
+        "Sizning IP manbasingizdan 15 daqiqada 100 dan ortiq so'rov keldi. Iltimos, 15 daqiqa kutib qoling.",
+    });
   },
 });
 
