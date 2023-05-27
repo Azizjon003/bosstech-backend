@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import messageRoute from "../routes/messages.routes.js";
 import rateLimit from "express-rate-limit";
@@ -14,44 +14,22 @@ const app = express();
 
 // Apply the rate limiting middleware to all requests
 // app.use(limiter);
-const limitRequestsByIP = (req, res, next) => {
-  const ipAddress = req.ip; // Foydalanuvchi IP manbasini olish
-  const maxRequests = 10; // Maksimal so'rovlarni belgilash
-  const windowMs = 15 * 60 * 1000; // Davom etadigan vaqt (15 daqiqa)
-
-  // IP manbasiga asoslangan cheklov obyektini yaratish
-  if (!req.rateLimit) {
-    req.rateLimit = {};
-  }
-
-  // IP manbasiga asoslangan cheklov ma'lumotlarini tekshirish
-  if (!req.rateLimit[ipAddress]) {
-    req.rateLimit[ipAddress] = {
-      count: 1, // Tekshirilgan so'rovlar soni
-      resetTime: Date.now() + windowMs, // Cheklovni tiklash vaqti
-    };
-  } else {
-    req.rateLimit[ipAddress].count++; // So'rovlar sonini oshirish
-
-    // Cheklov vaqtini tekshirish
-    if (req.rateLimit[ipAddress].count > maxRequests) {
-      const timeLeft = Math.ceil(
-        (req.rateLimit[ipAddress].resetTime - Date.now()) / 1000
-      );
-      return res
-        .status(429)
-        .send(
-          `So'rovlar cheklov orqali chegaralangan. Iltimos, ${timeLeft} soniya kutib turing.`
-        );
-    }
-  }
-
-  // Cheklovga yetmagan so'rovlarni davom ettirish
-  next();
-};
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 daqiqa davomida
+  max: 10, // 15 daqiqada maksimal 100 ta so'rovga chegaralash
+  keyGenerator: function (req) {
+    return req.ip; // Foydalanuvchi IP manbasini cheklov kaliti sifatida olib kelish
+  },
+  handler: function (req, res) {
+    res.status(429).send('So\'rovlaringiz cheklov orqali chegaralangan');
+  },
+});
 
 // Middleware funksiyani ro'yxatga olish
-app.use(limitRequestsByIP);
+app.use(limiter);
+
+// Middleware funksiyani ro'yxatga olish
+// app.use(limitRequestsByIP);
 
 app.use(morgan("dev"));
 app.use(
