@@ -16,7 +16,7 @@ const app = express();
 // app.use(limiter);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 daqiqa davomida
-  max: 100, // 15 daqiqada maksimal 100 ta so'rovga chegaralash
+  max: 15, // 15 daqiqada maksimal 100 ta so'rovga chegaralash
   keyGenerator: function (req) {
     const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
     console.log(`Sizning IP manbasingiz: ${clientIP}`);
